@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Version list
+{% endblock %}
+
+{% block content %}
+    <h2>Listing all films:</h2>
+    <a href="/films/versions/new">New version</a>
+
+    <ul>
+        {% for version in versions %}
+            <li>
+                {{ version.title }}
+                {{ version.film }}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+
+

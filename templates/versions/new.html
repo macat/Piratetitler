@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+    New version
+{% endblock %}
+
+{% block content %}
+    <form action="" method="post" accept-charset="utf-8">
+        <div>{{ form.film.label }}: {{ form.film }}</div>
+        <div>{{ form.title.label }}: {{ form.title }} </div>
+        <p><input type="submit" value="Save version"/></p>
+    </form>
+{% endblock %}
+

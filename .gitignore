@@ -1,0 +1,5 @@
+bin/*
+etc/*
+var/*
+eggs/*
+app/distlib/*

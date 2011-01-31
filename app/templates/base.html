@@ -4,10 +4,14 @@
       <title>{% block title %}{% endblock %}</title>
         <link rel="stylesheet" type="text/css" href="/static/styles/screen.css">
     </head>
-    <body id="">
+    <body id="{% block bodyid %}page-default{% endblock %}">
         <div class="yui-d1">
             <div class="top">
-                <h1>tipfy.ext.auth example</h1>
+                <div id="menu-main">
+                    <ul>
+                        <li><a href="/films">Films</a>
+                    </ul>
+                </div>
                 <div class="user-status">
                     <p>{% if current_user or auth_session -%}
                         {% if current_user -%}

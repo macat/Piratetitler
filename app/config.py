@@ -26,6 +26,12 @@ config['tipfy'] = {
 
 config['tipfy.ext.session'] = {
     'secret_key' : 'just_dev_testaf03jldksajfldskjfS',
+    'default_backend': 'memcache',
+    'cookie_name': 'pirates.session',
+}
+
+config['tipfy.ext.auth'] = {
+    'user_model': 'apps.users.models.AuthUser',
 }
 
 config['tipfy.ext.auth.facebook'] = {

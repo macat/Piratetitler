@@ -2,7 +2,7 @@
 import logging
 from tipfy import RequestHandler, redirect, cached_property
 from tipfy.ext.jinja2 import render_response
-from tipfy.ext.auth import user_required, AppEngineAuthMixin
+from tipfy.ext.auth import user_required, MultiAuthMixin
 from tipfy.ext.session import AllSessionMixins, SessionMiddleware
 from forms import FilmForm, FilmVersionForm
 from models import Film, FilmVersion
@@ -20,7 +20,7 @@ class FilmPageHandler(RequestHandler):
         versions = FilmVersion.all().filter('film =', film)
         return render_response('films/page.html', versions=versions, film=film)
 
-class NewFilmHandler(RequestHandler, AppEngineAuthMixin, AllSessionMixins):
+class NewFilmHandler(RequestHandler, MultiAuthMixin, AllSessionMixins):
     middleware = [SessionMiddleware]
 
     @user_required
@@ -50,7 +50,7 @@ class FilmVersionPageHandler(RequestHandler):
         version = FilmVersion().get_by_id(version_id)
         return render_response('versions/page.html', version=version)
 
-class NewFilmVersionHandler(RequestHandler, AppEngineAuthMixin, AllSessionMixins):
+class NewFilmVersionHandler(RequestHandler, MultiAuthMixin, AllSessionMixins):
     middleware = [SessionMiddleware]
 
     @user_required
@@ -64,7 +64,7 @@ class NewFilmVersionHandler(RequestHandler, AppEngineAuthMixin, AllSessionMixins
             version = FilmVersion(
                 film=film,
                 title=self.form.title.data,
-                user=self.auth_session
+                user=self.auth_current_user
             )
             version.put()
             return redirect('/films/%d' % film.key().id())

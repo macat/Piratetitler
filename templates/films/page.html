@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ film.title }} - Film
+{% endblock %}
+
+{% block content %}
+    <h1>{{ film.title }}</h1>
+    <a href="/films/{{ film.key().id() }}/versions/new">New version</a>
+
+    <h2>Listing versions:</h2>
+    <ul>
+        {% for version in versions %}
+            <li>
+                <a href="/films/{{ film.key().id() }}/versions/{{ version.key().id() }}">{{ version.title }}</a>
+                {{ version.film }}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+
+

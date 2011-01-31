@@ -8,4 +8,4 @@ FilmForm = model_form(model=Film,
 
 FilmVersionForm = model_form(model=FilmVersion, 
                       base_class=Form, 
-                      exclude=['created', 'user'])
+                      exclude=['film', 'created', 'user'])

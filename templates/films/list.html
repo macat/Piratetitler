@@ -11,8 +11,9 @@
     <ul>
         {% for film in films %}
             <li>
-                {{ film.title }}
+                <a href="/films/{{ film.key().id() }}">{{ film.title }}</a>
                 {{ film.description }}
+                {{ film }}
             </li>
         {% endfor %}
     </ul>

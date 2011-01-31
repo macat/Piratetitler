@@ -2,7 +2,7 @@
 import logging
 from tipfy import RequestHandler, redirect, cached_property
 from tipfy.ext.jinja2 import render_response
-from tipfy.ext.auth import login_required, AppEngineAuthMixin
+from tipfy.ext.auth import user_required, AppEngineAuthMixin
 from tipfy.ext.session import AllSessionMixins, SessionMiddleware
 from forms import FilmForm, FilmVersionForm
 from models import Film, FilmVersion
@@ -23,11 +23,11 @@ class FilmPageHandler(RequestHandler):
 class NewFilmHandler(RequestHandler, AppEngineAuthMixin, AllSessionMixins):
     middleware = [SessionMiddleware]
 
-    @login_required
+    @user_required
     def get(self, **kwargs):
         return render_response('films/new.html', form=self.form)
 
-    @login_required
+    @user_required
     def post(self, **kwargs):
         if self.form.validate():
             film = Film(
@@ -53,11 +53,11 @@ class FilmVersionPageHandler(RequestHandler):
 class NewFilmVersionHandler(RequestHandler, AppEngineAuthMixin, AllSessionMixins):
     middleware = [SessionMiddleware]
 
-    @login_required
+    @user_required
     def get(self, **kwargs):
         return render_response('versions/new.html', form=self.form)
 
-    @login_required
+    @user_required
     def post(self, film_id, **kwargs):
         if self.form.validate():
             film = Film.get_by_id(film_id)

@@ -28,10 +28,10 @@ def get_rules(app):
     for app_module in app.get_config('tipfy', 'apps_installed'):
         try:
             # Load the urls module from the app and extend our rules.
-            logging.error(app_module)
             app_rules = import_string('%s.urls' % app_module)
             rules.extend(app_rules.get_rules(app))
-        except ImportError:
+        except ImportError, e:
+            logging.error('Importerror: %s' % e)
             pass
 
     

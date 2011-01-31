@@ -3,3 +3,5 @@ etc/*
 var/*
 eggs/*
 app/distlib/*
+app/lib/*
+.installed.cfg

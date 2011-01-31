@@ -2,9 +2,37 @@
     <head>
       <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
       <title>{% block title %}{% endblock %}</title>
+        <link rel="stylesheet" type="text/css" href="/static/styles/screen.css">
     </head>
     <body id="">
+        <div class="yui-d1">
+            <div class="top">
+                <h1>tipfy.ext.auth example</h1>
+                <div class="user-status">
+                    <p>{% if current_user or auth_session -%}
+                        {% if current_user -%}
+                            Signed in as <span class="user_email">{{ current_user.username|e }}</span> |
+                        {%- endif %} <a href="{{ logout_url }}">Sign out</a>
+                    {% else %}
+                        Hi, there. <a href="{{ login_url }}">Sign in</a>
+                    {% endif %}</p>
+                </div>
+            </div>
+        </div>
         {% block content %}
+        {% endblock %}
+        {%- block body_extra %}
+            <script src="/static/scripts/scripts.js"></script>
+
+            {%- block messages -%}
+                <script>
+                tipfy.instances = {};
+                tipfy.instances.messages = new tipfy.ui.Messages('tipfy-messages');
+                {% if messages %}
+                tipfy.instances.messages.addMessages({{ messages }});
+                {% endif %}
+                </script>
+            {%- endblock -%}
         {% endblock %}
     </body>
 </html>

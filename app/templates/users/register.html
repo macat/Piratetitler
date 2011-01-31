@@ -1,8 +1,8 @@
-{% extends 'layout.html' %}
+{% extends 'base.html' %}
 
 {% from '_form_macros.html' import form_field %}
 
-{% block body %}
+{% block content %}
     <h1>Register</h1>
     <p>Fill the form to create a new account, or <a href="{{ url_for('auth/login') }}">sign in with your existing one</a>.</p>
     <form method="post" action="{{ current_url }}" enctype="multipart/form-data" class="tipfy-form">

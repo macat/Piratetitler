@@ -4,7 +4,6 @@ from tipfy import (RequestHandler, RequestRedirect, Response, abort,
     cached_property, redirect, url_for)
 from tipfy.ext.auth import MultiAuthMixin, login_required, user_required
 from tipfy.ext.auth.facebook import FacebookMixin
-from tipfy.ext.auth.friendfeed import FriendFeedMixin
 from tipfy.ext.auth.google import GoogleMixin
 from tipfy.ext.auth.twitter import TwitterMixin
 from tipfy.ext.jinja2 import Jinja2Mixin
@@ -77,15 +76,11 @@ class BaseHandler(RequestHandler, MultiAuthMixin, Jinja2Mixin,
         return redirect(url)
 
 
-class HomeHandler(BaseHandler):
-    def get(self, **kwargs):
-        return self.render_response('home.html', section='home')
-
 
 class ContentHandler(BaseHandler):
     @user_required
     def get(self, **kwargs):
-        return self.render_response('content.html', section='content')
+        return self.render_response('users/content.html', section='content')
 
 
 class LoginHandler(BaseHandler):
@@ -100,12 +95,10 @@ class LoginHandler(BaseHandler):
         context = {
             'form':                 self.form,
             'facebook_login_url':   url_for('auth/facebook', **opts),
-            'friendfeed_login_url': url_for('auth/friendfeed', **opts),
             'google_login_url':     url_for('auth/google', **opts),
             'twitter_login_url':    url_for('auth/twitter', **opts),
-            'yahoo_login_url':      url_for('auth/yahoo', **opts),
         }
-        return self.render_response('login.html', **context)
+        return self.render_response('users/login.html', **context)
 
     def post(self, **kwargs):
         redirect_url = self.redirect_path()
@@ -145,7 +138,7 @@ class SignupHandler(BaseHandler):
             # User is already registered, so don't display the signup form.
             return redirect(self.redirect_path())
 
-        return self.render_response('signup.html', form=self.form)
+        return self.render_response('users/signup.html', form=self.form)
 
     @login_required
     def post(self, **kwargs):
@@ -185,7 +178,7 @@ class RegisterHandler(BaseHandler):
             # User is already registered, so don't display the registration form.
             return redirect(redirect_url)
 
-        return self.render_response('register.html', form=self.form)
+        return self.render_response('users/register.html', form=self.form)
 
     def post(self, **kwargs):
         redirect_url = self.redirect_path()
@@ -260,32 +253,6 @@ class FacebookAuthHandler(BaseHandler, FacebookMixin):
             session_key=user.get('session_key'))
         return self._on_auth_redirect()
 
-
-class FriendFeedAuthHandler(BaseHandler, FriendFeedMixin):
-    """
-    """
-    def get(self):
-        url = self.redirect_path()
-
-        if 'id' in self.auth_session:
-            # User is already signed in, so redirect back.
-            return redirect(url)
-
-        self.session['_continue'] = url
-
-        if self.request.args.get('oauth_token', None):
-            return self.get_authenticated_user(self._on_auth)
-
-        return self.authorize_redirect()
-
-    def _on_auth(self, user):
-        if not user:
-            abort(403)
-
-        auth_id = 'friendfeed|%s' % user.pop('username', '')
-        self.auth_login_with_third_party(auth_id, remember=True,
-            access_token=user.get('access_token'))
-        return self._on_auth_redirect()
 
 
 class TwitterAuthHandler(BaseHandler, TwitterMixin):

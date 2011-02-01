@@ -20,6 +20,7 @@ class FilmPageHandler(RequestHandler):
         versions = FilmVersion.all().filter('film =', film)
         return render_response('films/page.html', versions=versions, film=film)
 
+
 class NewFilmHandler(RequestHandler, MultiAuthMixin, AllSessionMixins):
     middleware = [SessionMiddleware]
 
@@ -33,7 +34,7 @@ class NewFilmHandler(RequestHandler, MultiAuthMixin, AllSessionMixins):
             film = Film(
                 title = self.form.title.data,
                 description = self.form.description.data,
-                user = self.auth_session
+                user = self.auth_current_user.user
             )
             film.put()
             return redirect('/films')
@@ -44,11 +45,11 @@ class NewFilmHandler(RequestHandler, MultiAuthMixin, AllSessionMixins):
         return FilmForm(self.request)
 
 
-
 class FilmVersionPageHandler(RequestHandler):
     def get(self, film_id, version_id):
         version = FilmVersion().get_by_id(version_id)
         return render_response('versions/page.html', version=version)
+
 
 class NewFilmVersionHandler(RequestHandler, MultiAuthMixin, AllSessionMixins):
     middleware = [SessionMiddleware]
@@ -64,7 +65,7 @@ class NewFilmVersionHandler(RequestHandler, MultiAuthMixin, AllSessionMixins):
             version = FilmVersion(
                 film=film,
                 title=self.form.title.data,
-                user=self.auth_current_user
+                user=self.auth_current_user.user
             )
             version.put()
             return redirect('/films/%d' % film.key().id())

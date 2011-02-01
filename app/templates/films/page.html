@@ -12,11 +12,9 @@
     <ul>
         {% for version in versions %}
             <li>
-                <a href="/films/{{ film.key().id() }}/versions/{{ version.key().id() }}">{{ version.title }}</a>
+                {{ version.title }}
                 {{ version.film }}
             </li>
         {% endfor %}
     </ul>
 {% endblock %}
-
-

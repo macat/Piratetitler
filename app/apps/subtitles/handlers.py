@@ -9,6 +9,7 @@ from apps.subtitles.models import Language, Subtitle, Line, LineRevision, SrtFil
 from apps.subtitles.forms import SrtImportForm
 from apps.films.models import Film, FilmVersion
 
+import logging
 
 class ImportHandler(RequestHandler, MultiAuthMixin, AllSessionMixins):
     middleware = [SessionMiddleware]
@@ -30,7 +31,6 @@ class ImportHandler(RequestHandler, MultiAuthMixin, AllSessionMixins):
             srt_file = self.request.files.get('srt_file')
 
             if srt_file:
-                import logging
                 logging.info('file')
                 logging.info(srt_file.stream)
                 logging.info(srt_file.stream.__doc__)
@@ -51,6 +51,7 @@ class ImportHandler(RequestHandler, MultiAuthMixin, AllSessionMixins):
                              end=line['end'])
                     l.put()
                     lr = LineRevision(line=l,
+                                      subtitle=subtitle,
                                       user=self.auth_current_user.user,
                                       text=line['text'])
                     lr.put()
@@ -61,7 +62,7 @@ class ImportHandler(RequestHandler, MultiAuthMixin, AllSessionMixins):
                 srt_content
 
                 
-                return redirect('/films')
+                return redirect('/subtitles/%d/edit' % subtitle.key().id())
 
     @user_required
     def get(self, film_id, version_id):
@@ -121,4 +122,17 @@ def time2ms(timeString):
 
             
 
+class EditHandler(RequestHandler, MultiAuthMixin, AllSessionMixins):
+    middleware = [SessionMiddleware]
+
+    def get(self, subtitle_id):
+        subtitle = Subtitle.get_by_id(subtitle_id)
+        logging.info(subtitle)
+        lines = Line.all().filter('subtitle =', subtitle).order('start')
+        revisions = LineRevision.all().filter('subtitle =', subtitle)
+        line_revisions = {}
+        for revision in revisions:
+            line_revisions[revision.line.key().id()] = [revision.text]
+
+        return render_response('subtitles/edit.html', subtitle=subtitle, lines=lines, line_revisions=line_revisions)
 

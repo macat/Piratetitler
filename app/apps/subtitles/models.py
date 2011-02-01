@@ -26,7 +26,8 @@ class Line(db.Model):
 
 
 class LineRevision(db.Model):
-    line = db.ReferenceProperty(Line, collection_name='lines', required=True)
+    line = db.ReferenceProperty(Line, collection_name='revisions', required=True)
+    subtitle = db.ReferenceProperty(Subtitle, collection_name='revisions', required=True)
     user = db.ReferenceProperty(User, collection_name='subtitle_lines', required=True)
     text = db.StringProperty(required=True, multiline=True)
     created = db.DateTimeProperty(auto_now_add=True)

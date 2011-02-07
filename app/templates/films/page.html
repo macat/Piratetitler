@@ -15,7 +15,6 @@
                 {{ version.title }}
                 <h3> Subtitles</h3>
                 <a href="/films/{{ film.key().id() }}/versions/{{ version.key().id() }}/subtitles/import">Import new subtitles</a><br><br>
-                {{ version.subtitles }}
                 {% for subtitles in version.subtitles %}
                 <a href="/subtitles/{{ subtitles.key().id() }}/edit">{{ subtitles.id }}</a><br>
                 {% endfor %}

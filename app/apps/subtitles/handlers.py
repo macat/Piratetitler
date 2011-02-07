@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 import re
-from tipfy import RequestHandler, redirect, cached_property
+from tipfy import RequestHandler, redirect, cached_property, render_json_response
 from tipfy.ext.jinja2 import render_response
 from tipfy.ext.auth import user_required, MultiAuthMixin
 from tipfy.ext.session import AllSessionMixins, SessionMiddleware
 
-from apps.subtitles.models import Language, Subtitle, Line, LineRevision, SrtFile
+from apps.subtitles.models import Language, Subtitles, SubtitlesChangeset
 from apps.subtitles.forms import SrtImportForm
 from apps.films.models import Film, FilmVersion
 
@@ -23,11 +23,6 @@ class ImportHandler(RequestHandler, MultiAuthMixin, AllSessionMixins):
             lan = Language(name='hun')
             lan.put()
 
-            subtitle = Subtitle(film=film,
-                                version=film_version,
-                                user=self.auth_current_user.user,
-                                language=lan)
-            subtitle.put()
             srt_file = self.request.files.get('srt_file')
 
             if srt_file:
@@ -42,24 +37,16 @@ class ImportHandler(RequestHandler, MultiAuthMixin, AllSessionMixins):
                     encoding = chardet.detect(srt_content)
                     srt_content = unicode(srt_content.decode(encoding['encoding']))
                     logging.info(encoding)
+
                 srt_content.replace('\r', '')
                 srt_lines = import_helper(srt_content)
-                for k, line in srt_lines.items():
-                    logging.info(line)
-                    l = Line(subtitle=subtitle,
-                             start=line['start'],
-                             end=line['end'])
-                    l.put()
-                    lr = LineRevision(line=l,
-                                      subtitle=subtitle,
-                                      user=self.auth_current_user.user,
-                                      text=line['text'])
-                    lr.put()
+                subtitle = Subtitles(film=film,
+                                    version=film_version,
+                                    user=self.auth_current_user.user,
+                                    language=lan)
+                subtitle.lines = srt_lines
+                subtitle.put()
 
-                
-                srt = SrtFile(name=srt_file.filename, content=srt_content)
-                srt.put()
-                srt_content
 
                 
                 return redirect('/subtitles/%d/edit' % subtitle.key().id())
@@ -76,7 +63,7 @@ class ImportHandler(RequestHandler, MultiAuthMixin, AllSessionMixins):
 def import_helper(content):
     _srt = re.sub(r'\r\n|\r|\n', '\n', content)
     lines = _srt.strip().split('\n\n')
-    ret = {}
+    ret = []
     for line in lines:
         if line.strip():
             subtitle = line.lstrip().split('\n')
@@ -86,12 +73,12 @@ def import_helper(content):
                 io[0] = re.sub('(\d{2}).(\d{2}).(\d{2}).(\d{3})', '\\1:\\2:\\3,\\4', io[0])
                 io[1] = io[1].strip().split(' ')[0]
                 io[1] = re.sub('(\d{2}).(\d{2}).(\d{2}).(\d{3})', '\\1:\\2:\\3,\\4', io[1])
-                sub_id ="%s" % int(subtitle[0])
-                ret[sub_id] = {
-                    'start': time2ms(io[0]),
-                    'end': time2ms(io[1]),
-                    'text': u'\n'.join(subtitle[2:]),
-                }
+                #sub_id ="%s" % int(subtitle[0])
+                ret.append((
+                    int(time2ms(io[0])), #start
+                    int(time2ms(io[1])), #end
+                    u'\n'.join(subtitle[2:]), #text
+                ))
     return ret
     
 
@@ -126,13 +113,22 @@ class EditHandler(RequestHandler, MultiAuthMixin, AllSessionMixins):
     middleware = [SessionMiddleware]
 
     def get(self, subtitle_id):
-        subtitle = Subtitle.get_by_id(subtitle_id)
-        logging.info(subtitle)
-        lines = Line.all().filter('subtitle =', subtitle).order('start')
-        revisions = LineRevision.all().filter('subtitle =', subtitle)
-        line_revisions = {}
-        for revision in revisions:
-            line_revisions[revision.line.key().id()] = [revision.text]
+        subtitle = Subtitles.get_by_id(subtitle_id)
+        logging.info(subtitle.text)
+        return render_response('subtitles/edit.html', subtitle=subtitle)
 
-        return render_response('subtitles/edit.html', subtitle=subtitle, lines=lines, line_revisions=line_revisions)
+class ChangeSetHandler(RequestHandler, MultiAuthMixin, AllSessionMixins):
+    middleware = [SessionMiddleware]
+
+    def get(self, subtitle_id):
+        changeset = SubtitlesChangeset.filter('subtitle =', subtitle_id)
+        return render_json_response(changeset)
+
+    def post(self, subtitle_id):
+        changeset = SubtitlesChangeset(user=self.auth_current_user.user,
+                                       subtitle=subtitle,
+                                       text=self.POST.get(text))
+
+
+        
 

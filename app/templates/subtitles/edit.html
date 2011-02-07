@@ -7,8 +7,8 @@
 {% block content %}
     <h1> Subtitle for {{ subtitle.film.title }}</h1>
     <table>
-    {% for line in lines %}
-        <tr><td>{{ line.start }}</td><td>{{ line.end }}</td><td>{{ line_revisions[line.key().id()]|join('|') }}</td></tr>
+    {% for line in subtitle.lines %}
+        <tr><td>{{ line }}</td></tr>
     {% endfor %}
     </table>
 {% endblock %}

@@ -7,6 +7,17 @@ from rwproperty import getproperty, setproperty
 class Language(db.Model):
     name = db.StringProperty(required=True)
 
+def subtitles_encode(lines):
+    out = []
+    for line in lines:
+        out.append(u'%d#%d#%s' % line)
+    return out
+
+def subtitles_decode(text):
+    ret_lines = []
+    for raw_line in text:
+        ret_lines.append(raw_line.split('#', 4))
+    return ret_lines
 
 class Subtitles(db.Model):
     film = db.ReferenceProperty(Film, collection_name='subtitles', required=True)
@@ -23,41 +34,41 @@ class Subtitles(db.Model):
 
     @getproperty
     def lines(self):
-        if self._lines: return self._lines
+        if not self._lines: 
+            self._lines = subtitles_decode(self.text)
+        return self._lines
 
-        ret_lines = []
-        for raw_line in self.text:
-            ret_lines.append(raw_line.split('#', 4))
-        self._lines = ret_lines
-        return ret_lines
 
     @setproperty
     def lines(self, lines):
         self._lines = lines
-        self.text = []
+        self.text = subtitles_encode(lines)
 
-        for line in lines:
-                self.text.append(u'%d#%d#%s' % line)
     
-    def set_changeset(self, lines):
+    def set_changeset(self, lines, user):
         cache_lines = {}
         for line in lines:
             cache_lines[line[0]] = line
 
-        changeset = []
-        for line in self.lines:
-            if line[0] in cache_lines:
-                line = cache_lines[line[0]]
-                del cache_lines[line[0]]
-            if cache_lines.keys()[0][0] > line[0]:
-                #TODO : finish it
+        subtitles_set = SubtitlesChangeSet(text=subtitles_encode(lines),
+                                           subtitles=self,
+                                           user=user)
+        subtitles_set.put()
+
+        l = len(self.lines)
+        while l:
+            l -= 1
+            if self._lines[l][0] in cache_lines:
+                self._lines[l] = cache_lines[self._lines[l][0]]
+                del cache_lines[self._lines[l][0]]
+        #TODO : Handle new lines
 
             
 
 
 class SubtitlesChangeSet(db.Model):
     text = db.StringListProperty(required=True)
-    subtitle = db.ReferenceProperty(Subtitles, collection_name='revisions', required=True)
+    subtitles = db.ReferenceProperty(Subtitles, collection_name='revisions', required=True)
     user = db.ReferenceProperty(User, collection_name='subtitle_lines', required=True)
     created = db.DateTimeProperty(auto_now_add=True)
 

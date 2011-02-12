@@ -5,7 +5,7 @@ from tipfy.ext.jinja2 import render_response
 from tipfy.ext.auth import user_required, MultiAuthMixin
 from tipfy.ext.session import AllSessionMixins, SessionMiddleware
 
-from apps.subtitles.models import Language, Subtitles, SubtitlesChangeset
+from apps.subtitles.models import Language, Subtitles, SubtitlesChangeSet
 from apps.subtitles.forms import SrtImportForm
 from apps.films.models import Film, FilmVersion
 

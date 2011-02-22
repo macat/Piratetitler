@@ -1,14 +1,26 @@
 {% extends "base.html" %}
 
-{% block title %}
-    New film
-{% endblock %}
+{% block title %}New film{% endblock %}
+
+{% block contenttitle %}New Film{% endblock %}
 
 {% block content %}
-    <form action="" method="post" accept-charset="utf-8">
-        <div>{{ form.title.label }}: {{ form.title }} </div>
-        <div>{{ form.description.label }}: {{ form.description }}</div>
-        <p><input type="submit" value="Save film"/></p>
+    <form action="" method="post" accept-charset="utf-8" enctype="multipart/form-data" class="uniForm">
+        <fieldset class="inlineLabels">
+            <div class="ctrlHolder">
+                <label>{{ form.title.label }}</label>
+                <input id="title" name="title" type="text" value="" class="textInput"/>
+                <p class="formHint">Title of the film</p>
+            </div>
+            <div class="ctrlHolder">
+                <label>{{ form.description.label }}</label>
+                <textarea id="comment" name="comment" rows="25" cols="25"></textarea>
+                <p class="formHint">Description of the film</p>
+            </div>
+            <div class="buttonHolder">
+                <button type="submit" class="primaryAction">Save</button>
+            </div>
+        </fieldset>
     </form>
 {% endblock %}
 

@@ -1,0 +1,89 @@
+/* YUI reset / fonts / grids */
+@import url('_base.css');
+@import url('uni-form.css');
+@import url('default.uni-form.css');
+
+html {
+  line-height: 1.5;
+  color: #343434;
+  font-family: "Lucida Sans Unicode", "Lucida Grande", Arial, Verdana, sans-serif;
+}
+
+html body {
+  background: #fff;
+  text-align: left;
+  font-size: 14px;
+}
+
+/* Font Smoothing for OS X */
+body { -webkit-text-stroke: 1px transparent; }
+@media only screen and (max-device-width: 480px) { body { -webkit-text-stroke: 0 black; } }
+
+
+
+.top {
+  position: relative;
+  margin-top: 1em;
+}
+.top h1 {
+  font-size: 184%;
+  font-family: arial, sans-serif;
+  color: #0066CC;
+}
+
+.user-status {
+  position: absolute;
+  top: 0;
+  right: 0;
+  text-align: right;
+}
+.user-status p {
+  padding: .5em;
+  margin: 0;
+}
+
+.line {
+  width: 600px;
+  margin: 0 auto;
+  border-bottom: 1px solid #666;
+}
+
+.row .time {
+  float: left;
+  width: 200px;
+}
+
+
+#content, #head {
+  width: 620px;
+}
+
+#content {
+  margin: 0 auto;
+  background: #ececed;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  -moz-box-shadow: 0px 0px 9px #aaa;
+  -webkit-box-shadow: 0px 0px 9px #aaa;
+  box-shadow: 0px 0px 9px #aaa;
+  
+}
+
+#head {
+  margin: 10px auto;
+}
+
+#content-inner {
+  padding: 24px;
+}
+
+
+/*  Form   */
+#content .uniForm .buttonHolder {
+  text-shadow: 1px 1px 0 rgba(255,255,255,.35);
+}
+
+#content .uniform .ctrlholder {
+  padding: 1em 0;
+}

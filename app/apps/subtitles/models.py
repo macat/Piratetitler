@@ -6,6 +6,9 @@ from rwproperty import getproperty, setproperty
 
 class Language(db.Model):
     name = db.StringProperty(required=True)
+    native_name = db.StringProperty(required=True)
+    iso_code = db.StringProperty(required=True)
+    right_to_left = db.BooleanProperty(default=False)
 
 def subtitles_encode(lines):
     out = []
@@ -45,23 +48,59 @@ class Subtitles(db.Model):
         self.text = subtitles_encode(lines)
 
     
-    def set_changeset(self, lines, user):
-        cache_lines = {}
+    def set_changeset(self, lines):
+        changedLines = []
         for line in lines:
-            cache_lines[line[0]] = line
+            # TODO: optimize it (it's max. line*N iteration, should be max. N)
+            if line['o'] == False:
+                if self.insertNewLine(line):
+                    changedLines.append(line)
+            else:
+                if self.changeLine(line):
+                    changedLines.append(line)
+        if len(changedLines):
+            return changedLines
+        else:
+            return None
 
-        subtitles_set = SubtitlesChangeSet(text=subtitles_encode(lines),
-                                           subtitles=self,
-                                           user=user)
-        subtitles_set.put()
+    def inserNewLine(self, line):
+        # cache lines
+        self_lines = self.lines
+        c_line = line['n']
+        counter = 0
+        for self_line in self_lines:
+            if c_line[0] > self_line[0]:
+                self_lines.insert(counter, c_line)
+                self.lines = self_lines
+                return line
+            counter += 1
+        return None
 
-        l = len(self.lines)
-        while l:
-            l -= 1
-            if self._lines[l][0] in cache_lines:
-                self._lines[l] = cache_lines[self._lines[l][0]]
-                del cache_lines[self._lines[l][0]]
-        #TODO : Handle new lines
+    def changeLine(self, line):
+        import logging
+        # cache lines
+        self_lines = self.lines
+
+        counter = len(self_lines)
+        while counter:
+            counter -= 1
+            if line['o'][0] == self_lines[counter][0] and line['o'][1] == self_lines[counter][1]:
+                logging.info('-----')
+                logging.info(counter)
+                logging.info(line['n'])
+                self_lines[counter] = line['n']
+                self.lines = self_lines
+                return line
+        return None
+
+                
+
+
+
+    def get_times(self):
+        lines = self.lines
+        return [[x[0], x[1]] for x in lines]
+
 
             
 

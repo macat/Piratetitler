@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 import re
-from tipfy import RequestHandler, redirect, cached_property, render_json_response
+from django.utils import simplejson
+from tipfy import redirect, cached_property, render_json_response
 from tipfy.ext.jinja2 import render_response
+from tipfy.ext.i18n import gettext as _
 from tipfy.ext.auth import user_required, MultiAuthMixin
-from tipfy.ext.session import AllSessionMixins, SessionMiddleware
 
 from apps.subtitles.models import Language, Subtitles, SubtitlesChangeSet
 from apps.subtitles.forms import SrtImportForm
 from apps.films.models import Film, FilmVersion
+from apps.utils import BaseHandler
 
 import logging
 
-class ImportHandler(RequestHandler, MultiAuthMixin, AllSessionMixins):
-    middleware = [SessionMiddleware]
-
+class ImportHandler(BaseHandler):
     @user_required
     def post(self, film_id, version_id):
         if self.form.validate():
@@ -107,28 +107,69 @@ def time2ms(timeString):
     ms = ms * 60 + float(p[i])
   return int(ms * 1000)
 
+def format_line(line):
+    out = {
+        'n': [int(line['n'][0]), int(line['n'][1]), unicode(line['n'][2])]
+    }
+    if line['o'] == False:
+        out['o'] = False
+    else:
+        out['o'] = [int(line['o'][0]), int(line['o'][1])]
+
+    return out
             
 
-class EditHandler(RequestHandler, MultiAuthMixin, AllSessionMixins):
-    middleware = [SessionMiddleware]
+class EditHandler(BaseHandler):
+    def get(self, subtitles_id):
+        subtitles = Subtitles.get_by_id(subtitles_id)
+        return render_response('subtitles/edit.html', subtitles=subtitles)
 
+class SubtitleLines(BaseHandler):
+    def get(self, subtitles_id):
+        subtitles = Subtitles.get_by_id(subtitles_id)
+        return render_json_response(subtitles.lines)
+
+class ChangeSetHandler(BaseHandler):
     def get(self, subtitle_id):
-        subtitle = Subtitles.get_by_id(subtitle_id)
-        logging.info(subtitle.text)
-        return render_response('subtitles/edit.html', subtitle=subtitle)
-
-class ChangeSetHandler(RequestHandler, MultiAuthMixin, AllSessionMixins):
-    middleware = [SessionMiddleware]
-
-    def get(self, subtitle_id):
-        changeset = SubtitlesChangeset.filter('subtitle =', subtitle_id)
+        changeset = SubtitlesChangeSet.filter('subtitle =', subtitle_id)
         return render_json_response(changeset)
 
     def post(self, subtitle_id):
-        changeset = SubtitlesChangeset(user=self.auth_current_user.user,
-                                       subtitle=subtitle,
-                                       text=self.POST.get(text))
+        subtitles = Subtitles.get_by_id(subtitle_id);
+        if subtitles:
+            changeset = map(format_line, simplejson.loads(self.request.form.get('changeset')))
+            changedLines = subtitles.set_changeset(changeset)
+            if changedLines:
+                changeset = SubtitlesChangeSet(
+                    text=simplejson.dumps(changedLines),
+                    subtitles=subtitles,
+                    user=self.auth_current_user.user
+                )
+                changeset.put()
+                subtitles.put()
+                return render_json_response({'status': 'ok'})
+            else: 
+                return render_json_response({'status': 'error', 'message': _('Error happened during the saving process')})
+        else:
+            return render_json_response({'status': 'error', 'message': _('Not valid Subtitles ID')})
 
+class TranslateHandler(BaseHandler):
+    def post(self):
+        subtitles = Subtitles.get_by_id(self.request.form.get('id'));
+        if subtitles:
+            times = subtitles.get_times()
+            new_subtitles = Subtitles(
+                film=subtitles.film,
+                version=subtitles.version,
+                user=self.auth_current_user.user,
+                language=self.request.form.get('language'),
+                translated_from_language=subtitles.language,
+                reference=subtitles,
+            )
+            empty_lines = [[x[0], x[1], ''] for x in times]
+            new_subtitles.lines = empty_lines
+            new_subtitles.put()
+            return self.redirect_to('subtitles/edit', subtitles_id=new_subtitles.key().id())
 
         
 

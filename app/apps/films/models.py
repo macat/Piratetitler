@@ -1,4 +1,5 @@
 from google.appengine.ext import db
+from google.appengine.ext import blobstore
 from apps.users.models import User
 
 class Film(db.Model):

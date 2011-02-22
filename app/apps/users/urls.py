@@ -20,17 +20,15 @@ def get_rules(app):
     :return:
         A list of class:`tipfy.Rule` instances.
     """
-    import logging
-    logging.info('CSAA')
     rules = [
         Rule('/auth/login', endpoint='auth/login', handler='apps.users.handlers.LoginHandler'),
         Rule('/auth/logout', endpoint='auth/logout', handler='apps.users.handlers.LogoutHandler'),
         Rule('/auth/signup', endpoint='auth/signup', handler='apps.users.handlers.SignupHandler'),
         Rule('/auth/register', endpoint='auth/register', handler='apps.users.handlers.RegisterHandler'),
 
-        Rule('/auth/facebook/', endpoint='auth/facebook', handler='apps.users.handlers.FacebookAuthHandler'),
-        Rule('/auth/google/', endpoint='auth/google', handler='apps.users.handlers.GoogleAuthHandler'),
-        Rule('/auth/twitter/', endpoint='auth/twitter', handler='apps.users.handlers.TwitterAuthHandler'),
+        Rule('/auth/facebook', endpoint='auth/facebook', handler='apps.users.handlers.FacebookAuthHandler'),
+        Rule('/auth/google', endpoint='auth/google', handler='apps.users.handlers.GoogleAuthHandler'),
+        Rule('/auth/twitter', endpoint='auth/twitter', handler='apps.users.handlers.TwitterAuthHandler'),
     ]
 
     return rules

@@ -130,18 +130,21 @@ class SubtitleLines(BaseHandler):
         return render_json_response(subtitles.lines)
 
 class ChangeSetHandler(BaseHandler):
+    @user_required
     def get(self, subtitle_id):
         changeset = SubtitlesChangeSet.filter('subtitle =', subtitle_id)
         return render_json_response(changeset)
 
+    @user_required
     def post(self, subtitle_id):
         subtitles = Subtitles.get_by_id(subtitle_id);
         if subtitles:
             changeset = map(format_line, simplejson.loads(self.request.form.get('changeset')))
             changedLines = subtitles.set_changeset(changeset)
+            logging.debug(changedLines)
             if changedLines:
                 changeset = SubtitlesChangeSet(
-                    text=simplejson.dumps(changedLines),
+                    text=[simplejson.dumps(x) for x in changedLines],
                     subtitles=subtitles,
                     user=self.auth_current_user.user
                 )
@@ -155,7 +158,7 @@ class ChangeSetHandler(BaseHandler):
 
 class TranslateHandler(BaseHandler):
     def post(self):
-        subtitles = Subtitles.get_by_id(self.request.form.get('id'));
+        subtitles = Subtitles.get_by_id(int(self.request.form.get('id')))
         if subtitles:
             times = subtitles.get_times()
             new_subtitles = Subtitles(

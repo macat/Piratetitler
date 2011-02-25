@@ -10,7 +10,7 @@ function(subtitleListSetup, subtitleEditSetup, objectServiceSetup, changeSetSave
   subtitleListSetup($('#subtitles'));
   subtitleEditSetup();
   objectServiceSetup({
-    url: 'http://localhost:8080/sl/4242',
+    url: application.conf.objectServiceUrl,
     type: 'subtitles',
     dataMapper: function(n) {
       return {
@@ -21,7 +21,7 @@ function(subtitleListSetup, subtitleEditSetup, objectServiceSetup, changeSetSave
     }
   });
   changeSetSaveSetup({
-    url: '/sc/4242',
+    url: application.conf.changeSetUrl,
     type: 'subtitle',
   });
 });

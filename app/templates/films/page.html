@@ -8,15 +8,22 @@
     <h1>{{ film.title }}</h1>
     <a href="/films/{{ film.key().id() }}/versions/new">New version</a>
 
-    <h2>Listing versions:</h2>
+    <h2>Listing versions ({{ versions|length }}):</h2>
+    Subtitles {{ subtitles|length }}
+    {{ subtitles }}
     <ul>
         {% for version in versions %}
             <li>
                 {{ version.title }}
                 <h3> Subtitles</h3>
                 <a href="/films/{{ film.key().id() }}/versions/{{ version.key().id() }}/subtitles/import">Import new subtitles</a><br><br>
-                {% for subtitles in version.subtitles %}
-                <a href="/subtitles/{{ subtitles.key().id() }}/edit">{{ subtitles.id }}</a><br>
+                {{ version.key().id() }} --
+                {% for subtitles in subtitles[version.key().id()] %}
+                <a href="/subtitles/{{ subtitles.key().id() }}/edit">{{ subtitles.created }}</a><br>
+                <form action="/translate" method="POST">
+                    <input type="hidden" name="id" value="{{ subtitles.key().id() }}"/>
+                    <button>Translate</button>
+                </form>
                 {% endfor %}
 
             </li>

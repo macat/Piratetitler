@@ -18,6 +18,14 @@
       return new F();
     };
 
+  var application = {
+    conf: {
+      changeSetUrl: '/sc/{{ subtitles.key().id() }}',
+      objectServiceUrl: '/sl/{{ subtitles.key().id() }}',
+    }
+  };
+
+
   // app-wide dependencies, not in requirejs module format
   require(
     ['/static/js/lib/pubsub.js', '/static/js/lib/mustache/mustache.js', '/static/js/lib/jquery.json-2.2.min.js'], function() {

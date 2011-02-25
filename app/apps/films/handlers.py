@@ -9,6 +9,8 @@ from tipfy.ext.blobstore import BlobstoreDownloadMixin, BlobstoreUploadMixin
 from forms import FilmForm, FilmVersionForm
 from models import Film, FilmVersion
 
+from apps.subtitles.models import Subtitles
+
 
 
 class FilmListHandler(RequestHandler, MultiAuthMixin, AllSessionMixins, Jinja2Mixin):
@@ -21,8 +23,15 @@ class FilmListHandler(RequestHandler, MultiAuthMixin, AllSessionMixins, Jinja2Mi
 class FilmPageHandler(RequestHandler, Jinja2Mixin):
     def get(self, film_id):
         film = Film.get_by_id(film_id)
-        versions = FilmVersion.all().filter('film =', film)
-        return self.render_response('films/page.html', versions=versions, film=film)
+        versions = list(FilmVersion.all().filter('film =', film))
+        subtitles = list(Subtitles.all().filter('film =', film))
+        subtitles_out = {}
+        logging.debug(versions)
+        for entry in subtitles:
+            if entry.version.key().id() not in subtitles_out:
+                subtitles_out[entry.version.key().id()] = []
+            subtitles_out[entry.version.key().id()].append(entry)
+        return self.render_response('films/page.html', versions=versions, film=film, subtitles=subtitles_out)
 
 
 class NewFilmHandler(RequestHandler, MultiAuthMixin, AllSessionMixins, Jinja2Mixin):

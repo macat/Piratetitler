@@ -6,6 +6,7 @@ def get_rules(app):
         Rule('/subtitles/<int:subtitles_id>/edit', endpoint='subtitles/edit', handler='apps.subtitles.handlers.EditHandler'),
         Rule('/sc/<int:subtitle_id>', endpoint='subtitles_changeset/api', handler='apps.subtitles.handlers.ChangeSetHandler'),
         Rule('/sl/<int:subtitles_id>', endpoint='subtitle_lines/api', handler='apps.subtitles.handlers.SubtitleLines'),
+        Rule('/translate', endpoint='subtitles/translate', handler='apps.subtitles.handlers.TranslateHandler'),
     ]
 
     return rules

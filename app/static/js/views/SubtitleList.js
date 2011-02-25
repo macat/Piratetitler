@@ -13,12 +13,16 @@ function(tpl) {
 
     lineClick: function(e) {
       var target = $(e.currentTarget);
-      $.publish('subtitle/click', [this, target]);
+      if (target.data('blocked') != true) {
+        $.publish('subtitle/click', [this, target]);
+      }
     },
 
     reloadLine: function(sender, el) {
       el.empty();
       $(Mustache.to_html(tpl, el.data('subtitle'))).appendTo(el);
+      var text = el.find('.text');
+      text.html(text.text().replace(/\n/, '<br/>'));
     },
 
     reloadLines: function(sender, lines) {
@@ -31,6 +35,8 @@ function(tpl) {
     addLine: function(lineData) {
       var line = $('<div class="line"></div>').appendTo(this.el);
       $(Mustache.to_html(tpl, lineData)).appendTo(line);
+      var text = line.find('.text');
+      text.html(text.text().replace(/\n/, '<br/>'));
       line.data('subtitle', lineData);
       line.data('subtitle-original', lineData);
     }

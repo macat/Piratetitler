@@ -6,6 +6,7 @@ function(tpl) {
     init: function() {
       $.subscribe('subtitle/click', $.proxy(this, 'editLine'));
       $.subscribe('closing', $.proxy(this, 'closeEditLine'));
+      $('textarea').live('keydown', $.proxy(this, 'handleKeypress'));
     },
     editLine: function(sender, target) {
 
@@ -20,6 +21,7 @@ function(tpl) {
       this._editEl = target;
       target.data('blocked', true);
       target.html(Mustache.to_html(tpl, target.data('subtitle')));
+      this._editEl.find('textarea').focus();
     },
 
     closeEditLine: function(sender) {
@@ -34,6 +36,17 @@ function(tpl) {
       var line = this._editEl.data('subtitle');
       line.text = this._editEl.find('textarea').val();
       this._editEl.data('subtitle', line);
+    },
+
+    handleKeypress: function(e) {
+      if (e.keyCode == 9) {
+        e.preventDefault();
+        this.editNextLine();        
+      }
+    },
+
+    editNextLine: function() {
+      this.editLine(this, this._editEl.next());
     }
   };
 

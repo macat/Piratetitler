@@ -20,8 +20,10 @@ function(tpl) {
       }
       this._editEl = target;
       target.data('blocked', true);
-      target.html(Mustache.to_html(tpl, target.data('subtitle')));
-      this._editEl.find('textarea').focus();
+      var textEl = target.find('.text');
+      var textArea = $('<textarea>'+ target.data('subtitle').text +'</textarea>')
+      textEl.html(textArea);
+      textArea.focus();
     },
 
     closeEditLine: function(sender) {

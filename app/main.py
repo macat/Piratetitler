@@ -17,6 +17,15 @@ if 'lib' not in sys.path:
     sys.path[0:0] = ['lib', 'distlib', 'distlib.zip']
 
 import logging
+try:
+    import apps
+except ImportError, e:
+    logging.info(e)
+try:
+    import app
+except ImportError, e:
+    logging.info(e)
+
 logging.info(sys.path)
 
 import config

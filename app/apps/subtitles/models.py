@@ -7,10 +7,13 @@ from rwproperty import getproperty, setproperty
 import logging
 
 class Language(db.Model):
-    name = db.StringProperty(required=True)
-    native_name = db.StringProperty(required=True)
-    iso_code = db.StringProperty(required=True)
+    name = db.StringProperty()
+    native_name = db.StringProperty()
+    iso_code = db.StringProperty()
     right_to_left = db.BooleanProperty(default=False)
+
+    def __str__(self):
+        return '%s language' % self.name
 
 def subtitles_encode(lines):
     out = []
@@ -96,8 +99,6 @@ class Subtitles(db.Model):
         while counter:
             counter -= 1
             if line['o'][0] == self_lines[counter][0]:
-                logging.debug('HUHU')
-                logging.debug(line['o'][0])
                 logging.debug(self_lines[counter][0])
             if line['o'][0] == self_lines[counter][0] and line['o'][1] == self_lines[counter][1]:
                 logging.debug('-----')

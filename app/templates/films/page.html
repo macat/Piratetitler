@@ -6,27 +6,51 @@
 
 {% block content %}
     <h1>{{ film.title }}</h1>
-    <a href="/films/{{ film.key().id() }}/versions/new">New version</a>
-
-    <h2>Listing versions ({{ versions|length }}):</h2>
-    Subtitles {{ subtitles|length }}
-    {{ subtitles }}
-    <ul>
+    <article>
+        <p>
+        {{ film.description }}
+        </p>
+    </article>
+    <div class="block">
+    <h2>Versions</h2>
         {% for version in versions %}
-            <li>
-                {{ version.title }}
-                <h3> Subtitles</h3>
-                <a href="/films/{{ film.key().id() }}/versions/{{ version.key().id() }}/subtitles/import">Import new subtitles</a><br><br>
-                {{ version.key().id() }} --
-                {% for subtitles in subtitles[version.key().id()] %}
-                <a href="/subtitles/{{ subtitles.key().id() }}/edit">{{ subtitles.created }}</a><br>
+        <section class="version lifted">
+            <div class="item-toolbox">
+                <a href="/films/{{ film.key().id() }}/versions/{{ version.key().id() }}/subtitles/import" class="button"><span>Import new subtitles</span></a>
+            </div>
+            <h4>{{ version.title }}</h4>
+            {% for subtitles in subtitles[version.key().id()] %}
+            <article class="subtitles">
+                <div class="subtitles-language">
+                    <a href="/subtitles/{{ subtitles.key().id() }}/edit"><span class="{{ subtitles.language.iso_code }}">{{ subtitles.language.name }} ({{ subtitles.language.native_name }})</span></a>
+                </div>
+                <div class="meta">
+                    Created: {{ subtitles.created }}, by {{ subtitles.user.username }}
+                </div>
+                <div class="item-toolbox">
+                    <a href="/subtitles/{{ subtitles.key().id() }}/export/srt" class="button"><span>Download</span></a>
+                </div>
                 <form action="/translate" method="POST">
+                    {{ translate_form.language }}
                     <input type="hidden" name="id" value="{{ subtitles.key().id() }}"/>
                     <button>Translate</button>
                 </form>
-                {% endfor %}
-
-            </li>
+            </article>
+            {% endfor %}
+        </section>
         {% endfor %}
-    </ul>
+        <hr/>
+        <section>
+            <h4>Add new version</h4>
+            <form method="post" action="/films/{{ film.key().id() }}/versions/new" class="uniForm" id="new-version-form">
+                <fieldset class="inlineLabels">
+                    <div class="ctrHolder">
+                        <label>Name of version: </label>
+                        <input id="new-version-title" type="text" name="title" value=""/>
+                        <button type="submit">Add</button>
+                    </div>
+                </fieldset>
+            </form>
+        </section>
+    </div>
 {% endblock %}

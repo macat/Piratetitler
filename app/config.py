@@ -23,6 +23,7 @@ config['tipfy'] = {
         'apps.users',
         'apps.films',
         'apps.subtitles',
+        'apps.admin',
     ],
 }
 

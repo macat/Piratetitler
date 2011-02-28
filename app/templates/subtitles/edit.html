@@ -1,11 +1,25 @@
 {% extends "base.html" %}
 
-{% block title %}Edit subtitle{% endblock %}
-{% block contenttitle %}Edit subtitle{% endblock %}
+{% block title %}Subtitles for {{ subtitles.film.title }}{% endblock %}
+{% block contenttitle %}Subtitles for {{ subtitles.film.title }}{% endblock %}
 
 {% block content %}
-    <h3> Subtitle for {{ subtitles.film.title }}</h3>
-    <div id="subtitles"></div>
+    <div>Film: {{ subtitles.film.title }}</div>
+    <div>Version: {{ subtitles.version.title }}</div>
+    <div>Language: {{ subtitles.language.name }}</div>
+    {% if subtitles.reference %}
+    <div>Original (reference) language: {{ subtitles.reference.language.name }}</div>
+    {% endif %}
+    <div class="toolbox">
+      <button id="save-button">Save</button>
+    </div>
+    <div id="subtitles-header">
+      <span class="start">Start</span>
+      <span class="end">End</span>
+      <span class="text">Subtitle</span>
+    </div>
+    <div id="subtitles">
+    </div>
     <script type="text/javascript" src="/static/js/requireplugins-jquery-1.4.4.js"></script>
     <script type="text/javascript">
   // tell require where it can find our files
@@ -21,14 +35,17 @@
   var application = {
     conf: {
       changeSetUrl: '/sc/{{ subtitles.key().id() }}',
-      objectServiceUrl: '/sl/{{ subtitles.key().id() }}',
+      {% if subtitles.reference %}
+      objectReferenceServiceUrl: '/sl/{{ subtitles.reference.key().id() }}',
+      {% endif %}
+      objectServiceUrl: '/sl/{{ subtitles.key().id() }}'
     }
   };
 
 
   // app-wide dependencies, not in requirejs module format
   require(
-    ['/static/js/lib/pubsub.js', '/static/js/lib/mustache/mustache.js', '/static/js/lib/jquery.json-2.2.min.js'], function() {
+    ['/static/js/lib/pubsub.js', '/static/js/lib/sprintf.js', '/static/js/lib/mustache/mustache.js', '/static/js/lib/jquery.json-2.2.min.js'], function() {
     // application
     require(['app'], function(init) {
       // application init on ready

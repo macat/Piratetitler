@@ -9,6 +9,7 @@ function(tpl) {
       this.el.delegate('div.line', 'click', $.proxy(this, 'lineClick'));
       $.subscribe('subtitle/changed', $.proxy(this, 'reloadLine'));
       $.subscribe('subtitles/fetched', $.proxy(this, 'reloadLines'));
+      $.subscribe('subtitles-reference/fetched', $.proxy(this, 'handleFetchedReferences'));
     },
 
     lineClick: function(e) {
@@ -23,6 +24,10 @@ function(tpl) {
       $(Mustache.to_html(tpl, el.data('subtitle'))).appendTo(el);
       var text = el.find('.text');
       text.html(text.text().replace(/\n/, '<br/>'));
+      var reference = el.data('subtitle-reference');
+      if (reference) {
+        el.find('.subtitle-reference').html(reference.text.replace(/\n/, '<br/>'));
+      }
     },
 
     reloadLines: function(sender, lines) {
@@ -32,13 +37,37 @@ function(tpl) {
       }
     },
 
+    handleFetchedReferences: function(sender, lines) {
+      var el = null;
+      for (var i = 0, l = lines.length; i < l; i++) {
+        el = $('#subtitle-'+ lines[i].start +'-'+ lines[i].end);
+        if (el) {
+          el.find('.subtitle-reference').html(lines[i].text.replace(/\n/, '<br/>'));
+          el.data('subtitle-reference', lines[i]);
+        }
+      }
+    },
+
     addLine: function(lineData) {
       var line = $('<div class="line"></div>').appendTo(this.el);
-      $(Mustache.to_html(tpl, lineData)).appendTo(line);
-      var text = line.find('.text');
-      text.html(text.text().replace(/\n/, '<br/>'));
       line.data('subtitle', lineData);
       line.data('subtitle-original', lineData);
+      line.attr('id', 'subtitle-'+ lineData.start +'-'+ lineData.end);
+
+      var context = {
+        'start': this.ms2time(lineData.start),
+        'end': this.ms2time(lineData.end),
+        'text': lineData.text.replace(/\n/, '<br/>')
+      };
+      $(Mustache.to_html(tpl, context)).appendTo(line);
+    },
+    ms2time: function(ms) {
+      it = ms / 1000
+      ms = ms - it*1000
+      ss = it % 60
+      mm = ((it-ss)/60) % 60
+      hh = ((it-(mm*60)-ss)/3600) % 60
+      return sprintf("%02d:%02d:%02d,%03d", hh, mm, ss, ms);
     }
   };
 

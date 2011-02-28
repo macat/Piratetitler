@@ -1,18 +1,19 @@
 {% extends "base.html" %}
 
-{% block title %}
-    Film list
-{% endblock %}
+{% block title %}Film list{% endblock %}
+{% block contenttitle %}Film list{% endblock %}
 
+{% block toolbox %}
+<a href="/films/new" class="button"><span>New Film</span></a>
+{% endblock %}
 {% block content %}
-    <ul>
-        {% for film in films %}
-            <li>
-                <a href="/films/{{ film.key().id() }}">{{ film.title }}</a>
-                {{ film.description }}
-                {{ film }}
-            </li>
-        {% endfor %}
-    </ul>
+    {% for film in films %}
+    <article class="film">
+        <h3><a href="/films/{{ film.key().id() }}">{{ film.title }}</a></h3>
+        <p class="description">
+        {{ film.description }}
+        </p>
+    </article>
+    {% endfor %}
 {% endblock %}
 

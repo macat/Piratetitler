@@ -7,7 +7,7 @@
     <body id="{% block bodyid %}page-default{% endblock %}">
         <div id="head" class="top">
             <div id="logo">
-                <a href="/" title="Home - Subtitles Pirate"><img src="/static/images/logo.png" alt="Subtitles pirate logo"/> Subtitles pirate</a>
+                <a href="/" title="Home - Subtitles Pirate"><img src="/static/images/logo.png" alt="Subtitles pirate logo"/> SUBTITLES PIRATE</a>
             </div>
             <div class="user-status">
                 <p>{% if current_user or auth_session -%}
@@ -19,14 +19,23 @@
                 {% endif %}</p>
             </div>
         </div>
-        <div id="content">
+        <div id="content" class="container">
             <div id="content-inner">
 
         <h1>{% block contenttitle %}{% endblock %}</h1>
+        <div class="toolbox">
+            {% block toolbox %}
+            {% endblock %}
+        </div>
         {% block content %}
         {% endblock %}
             </div>
         </div>
+        <footer id="footer">
+        {% block footer %}
+            2011, a <a href="http://mindpirates.org/" title="Mindpirates">Mindpirates</a> production.
+        {% endblock %}  
+        </footer>
         {%- block body_extra %}
 
         {% endblock %}

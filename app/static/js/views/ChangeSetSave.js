@@ -9,6 +9,8 @@ function() {
     init: function() {
       this._changeSetPoolAge = new Date();
       $.subscribe(this.type +'/changed', $.proxy(this, 'handleChange'));
+      $.subscribe('closave', $.proxy(this, 'save'));
+      $.subscribe('save', $.proxy(this, 'save'));
     },
 
     handleChange: function(sender, el) {

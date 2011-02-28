@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
 from django.utils import simplejson
-from tipfy import redirect, cached_property, render_json_response
+from tipfy import redirect, cached_property, render_json_response, Response
 from tipfy.ext.jinja2 import render_response
 from tipfy.ext.i18n import gettext as _
 from tipfy.ext.auth import user_required, MultiAuthMixin
@@ -20,8 +20,7 @@ class ImportHandler(BaseHandler):
             film = Film.get_by_id(film_id)
             film_version = FilmVersion.get_by_id(version_id)
 
-            lan = Language(name='hun')
-            lan.put()
+            lan = Language.get(self.request.form.get('language'))
 
             srt_file = self.request.files.get('srt_file')
 
@@ -50,6 +49,8 @@ class ImportHandler(BaseHandler):
 
                 
                 return redirect('/subtitles/%d/edit' % subtitle.key().id())
+                
+        return self.get(film_id, version_id)
 
     @user_required
     def get(self, film_id, version_id):
@@ -57,7 +58,7 @@ class ImportHandler(BaseHandler):
 
     @cached_property
     def form(self):
-        return SrtImportForm()
+        return SrtImportForm(self.request.form)
 
 
 def import_helper(content):
@@ -161,11 +162,12 @@ class TranslateHandler(BaseHandler):
         subtitles = Subtitles.get_by_id(int(self.request.form.get('id')))
         if subtitles:
             times = subtitles.get_times()
+            language = Language.get(self.request.form.get('language'));
             new_subtitles = Subtitles(
                 film=subtitles.film,
                 version=subtitles.version,
                 user=self.auth_current_user.user,
-                language=self.request.form.get('language'),
+                language=language,
                 translated_from_language=subtitles.language,
                 reference=subtitles,
             )
@@ -174,5 +176,27 @@ class TranslateHandler(BaseHandler):
             new_subtitles.put()
             return self.redirect_to('subtitles/edit', subtitles_id=new_subtitles.key().id())
 
+
+class ExportHandler(BaseHandler):
+    def get(self, subtitles_id):
+        subtitles = Subtitles.get_by_id(int(subtitles_id))
+        if subtitles:
+            out = ""
+            for line in subtitles.lines:
+                out += ms2time(line[0]) + '\n'
+                out += ms2time(line[1]) + '\n'
+                out += line[2] + '\n\n'
+            filename = subtitles.film.title + '-' + subtitles.version.title + '-' + subtitles.language.name + '.srt'
+            response = Response(out,
+                    headers=[('Content-Type', 'plain/text; charset=utf-8',),
+                    ('Content-Disposition', 'Attachment; filename=%s' % filename,),
+                    ('Pragma', 'no-cache',),]
+            )
+            return response
+            
+
+                
+            
+        
         
 

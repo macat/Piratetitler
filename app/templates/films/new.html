@@ -7,14 +7,23 @@
 {% block content %}
     <form action="" method="post" accept-charset="utf-8" enctype="multipart/form-data" class="uniForm">
         <fieldset class="inlineLabels">
+            <div class="ctrHolder">
+                {{ form.errors }}
+            </div>
             <div class="ctrlHolder">
                 <label>{{ form.title.label }}</label>
+                {% if form.title.errors %}
+                <div class="error">{{ form.title.errors }}</div>
+                {% endif %}
                 <input id="title" name="title" type="text" value="" class="textInput"/>
                 <p class="formHint">Title of the film</p>
             </div>
             <div class="ctrlHolder">
                 <label>{{ form.description.label }}</label>
-                <textarea id="comment" name="comment" rows="25" cols="25"></textarea>
+                {% if form.description.errors %}
+                <div class="error">{{ form.description.errors }}</div>
+                {% endif %}
+                <textarea id="description" name="description" rows="25" cols="25"></textarea>
                 <p class="formHint">Description of the film</p>
             </div>
             <div class="buttonHolder">

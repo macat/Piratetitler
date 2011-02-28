@@ -5,10 +5,22 @@
 {% endblock %}
 
 {% block content %}
-    <form action="" method="post" accept-charset="utf-8" enctype="multipart/form-data">
-        <div>{{ form.language.label }}: {{ form.language }} </div>
-        <div>{{ form.srt_file.label }}: {{ form.srt_file }}</div>
-        <p><input type="submit" value="Import srt file"/></p>
+    <form action="" method="post" accept-charset="utf-8" enctype="multipart/form-data" class="uniForm">
+        <fieldset class="inlineLabels">
+            <div class="ctrlHolder">
+                {{ form.language.errors }}
+                {{ form.language.label }}
+                {{ form.language }}
+            </div>
+            <div class="ctrlHolder">
+                {{ form.srt_file.errors }}
+                {{ form.srt_file.label }}
+                {{ form.srt_file }}
+            </div>
+            <div class="buttonHolder">
+                <button type="submit" class="primaryAction">Import srt file</button>
+            </div>
+        </fieldset>
     </form>
 {% endblock %}
 

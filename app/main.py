@@ -16,18 +16,6 @@ if 'lib' not in sys.path:
     # and optionally to distlib loaded using zipimport.
     sys.path[0:0] = ['lib', 'distlib', 'distlib.zip']
 
-import logging
-try:
-    import apps
-except ImportError, e:
-    logging.info(e)
-try:
-    import app
-except ImportError, e:
-    logging.info(e)
-
-logging.info(sys.path)
-
 import config
 import tipfy
 

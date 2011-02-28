@@ -182,9 +182,11 @@ class ExportHandler(BaseHandler):
         subtitles = Subtitles.get_by_id(int(subtitles_id))
         if subtitles:
             out = ""
+            counter = 0
             for line in subtitles.lines:
-                out += ms2time(line[0]) + '\n'
-                out += ms2time(line[1]) + '\n'
+                counter += 1
+                out += str(counter) + '\n'
+                out += ms2time(line[0]) + '  --> '+ ms2time(line[1]) + '\n'
                 out += line[2] + '\n\n'
             filename = subtitles.film.title + '-' + subtitles.version.title + '-' + subtitles.language.name + '.srt'
             response = Response(out,
@@ -195,7 +197,25 @@ class ExportHandler(BaseHandler):
             return response
             
 
-                
+class ImportLanguageHandler(BaseHandler):
+    def get(self):
+
+        return render_response('languages/import.html')
+
+    def post(self):
+        json_file = self.request.files.get('file')
+        json_content = json_file.read()
+        objects = simplejson.loads(json_content)
+
+        for obj in objects:
+            l = Language(
+                    name=obj['name'],
+                    native_name=obj['native_name'],
+                    iso_code=obj['iso_code'])
+            l.put()
+
+        return self.redirect_to('languages/import')
+        
             
         
         

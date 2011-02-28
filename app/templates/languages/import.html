@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Import languages{% endblock %}
+
+{% block contenttitle %}Import languages{% endblock %}
+
+{% block content %}
+    <form action="" method="post" accept-charset="utf-8" enctype="multipart/form-data" class="uniForm">
+        <fieldset class="inlineLabels">
+            <div class="ctrlHolder">
+                <label>File</label>
+                <input type="file" name="file" value=""/>
+            </div>
+            <div class="buttonHolder">
+                <button type="submit" class="primaryAction">Import</button>
+            </div>
+        </fieldset>
+    </form>
+{% endblock %}
+
+

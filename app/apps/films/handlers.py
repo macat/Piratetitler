@@ -30,6 +30,7 @@ class FilmPageHandler(RequestHandler, Jinja2Mixin):
         subtitles = list(Subtitles.all().filter('film =', film))
         subtitles_out = {}
         translate_form = TranslateForm()
+        logging.info(translate_form.language)
         for entry in subtitles:
             if entry.version.key().id() not in subtitles_out:
                 subtitles_out[entry.version.key().id()] = []

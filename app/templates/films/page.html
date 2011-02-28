@@ -19,20 +19,20 @@
                 <a href="/films/{{ film.key().id() }}/versions/{{ version.key().id() }}/subtitles/import" class="button"><span>Import new subtitles</span></a>
             </div>
             <h4>{{ version.title }}</h4>
-            {% for subtitles in subtitles[version.key().id()] %}
+            {% for subtitle in subtitles[version.key().id()] %}
             <article class="subtitles">
                 <div class="subtitles-language">
-                    <a href="/subtitles/{{ subtitles.key().id() }}/edit"><span class="{{ subtitles.language.iso_code }}">{{ subtitles.language.name }} ({{ subtitles.language.native_name }})</span></a>
+                    <a href="/subtitles/{{ subtitle.key().id() }}/edit"><span class="{{ subtitle.language.iso_code }}">{{ subtitle.language.name }} ({{ subtitle.language.native_name }})</span></a>
                 </div>
                 <div class="meta">
-                    Created: {{ subtitles.created }}, by {{ subtitles.user.username }}
+                    Created: {{ subtitle.created }}, by {{ subtitle.user.username }}
                 </div>
                 <div class="item-toolbox">
-                    <a href="/subtitles/{{ subtitles.key().id() }}/export/srt" class="button"><span>Download</span></a>
+                    <a href="/subtitles/{{ subtitle.key().id() }}/export/srt" class="button"><span>Download</span></a>
                 </div>
                 <form action="/translate" method="POST">
                     {{ translate_form.language }}
-                    <input type="hidden" name="id" value="{{ subtitles.key().id() }}"/>
+                    <input type="hidden" name="id" value="{{ subtitle.key().id() }}"/>
                     <button>Translate</button>
                 </form>
             </article>

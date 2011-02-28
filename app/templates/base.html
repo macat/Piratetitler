@@ -15,7 +15,7 @@
                         Signed in as <span class="user_email">{{ current_user.username|e }}</span> |
                     {%- endif %} <a href="{{ logout_url }}">Sign out</a>
                 {% else %}
-                    Hi, there. <a href="{{ login_url }}">Sign in</a>
+                    Hi, there. <a href="/auth/login">Sign in</a>
                 {% endif %}</p>
             </div>
         </div>

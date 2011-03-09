@@ -7,7 +7,7 @@
 
 {%- macro form_field_description(field) -%}
     {% if field.description %}
-        <span class="descr">{{ field.description }}</span>
+        <p class="formHint">{{ field.description }}</span>
     {% endif %}
 {%- endmacro -%}
 
@@ -29,6 +29,7 @@
 {%- endmacro -%}
 
 {%- macro form_field(field) -%}
+    <div class="ctrlHolder">
     {% if field.type == 'BooleanField' %}
         {{ form_field_boolean(field, **kwargs) }}
     {% else%}
@@ -41,6 +42,7 @@
         {{ form_field_description(field) }}
         {{ form_field_errors(field) }}
     {% endif %}
+    </div>
 {%- endmacro -%}
 
 {%- macro form_field_td(field) -%}
@@ -71,11 +73,9 @@
             {{ field() }}
         {% endif %}
     {% endfor %}
-    <ol>
     {% for field in fields %}
         {% if field.type != 'HiddenField' %}
-            <li>{{ form_field(field) }}</li>
+            {{ form_field(field) }}
         {% endif %}
     {% endfor %}
-    </ol>
 {%- endmacro -%}

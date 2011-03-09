@@ -1,4 +1,4 @@
-application: subtitles-pirate
+application: piratetitler
 version: 2
 runtime: python
 api_version: 1

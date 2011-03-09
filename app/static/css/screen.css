@@ -272,13 +272,27 @@ footer, #footer {
   width: 340px;
 }
 
+#logo img {
+  float: left;
+}
 #logo {
   margin: 0 32px;
 }
 
 #logo a {
+  text-decoration: none;
+}
+#logo a span {
   color: #999;
   text-decoration: none;
-  font-size: 24px;
+  font-size: 18px;
   font-weight: bold;
+  display: block;
+  padding: 16px 0 0 36px;
+}
+
+#logo span.motto {
+  font-size: 10px;
+  display: block;
+  margin-left: 40px;
 }

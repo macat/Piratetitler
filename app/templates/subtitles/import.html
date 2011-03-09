@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "_form_macros.html" import form_fields %}
 
 {% block title %}
     New subtitle
@@ -7,16 +8,7 @@
 {% block content %}
     <form action="" method="post" accept-charset="utf-8" enctype="multipart/form-data" class="uniForm">
         <fieldset class="inlineLabels">
-            <div class="ctrlHolder">
-                {{ form.language.errors }}
-                {{ form.language.label }}
-                {{ form.language }}
-            </div>
-            <div class="ctrlHolder">
-                {{ form.srt_file.errors }}
-                {{ form.srt_file.label }}
-                {{ form.srt_file }}
-            </div>
+            {{ form_fields(form) }}
             <div class="buttonHolder">
                 <button type="submit" class="primaryAction">Import srt file</button>
             </div>

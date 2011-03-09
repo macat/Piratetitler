@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
     <head>
       <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
@@ -7,7 +8,9 @@
     <body id="{% block bodyid %}page-default{% endblock %}">
         <div id="head" class="top">
             <div id="logo">
-                <a href="/" title="Home - Subtitles Pirate"><img src="/static/images/logo.png" alt="Subtitles pirate logo"/> SUBTITLES PIRATE</a>
+                <a href="/" title="Home - Pirate Titler"><img src="/static/images/logo.png" alt="Subtitles pirate logo"/><span>PIRATE TITLER</span>
+                </a>
+                <span class="motto">Translate subtitles online!</span>
             </div>
             <div class="user-status">
                 <p>{% if current_user or auth_session -%}

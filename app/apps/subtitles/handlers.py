@@ -9,7 +9,7 @@ from tipfy.ext.auth import user_required, MultiAuthMixin
 from apps.subtitles.models import Language, Subtitles, SubtitlesChangeSet
 from apps.subtitles.forms import SrtImportForm
 from apps.films.models import Film, FilmVersion
-from apps.utils import BaseHandler
+from apps.users.handlers import BaseHandler
 
 import logging
 
@@ -200,7 +200,7 @@ class ExportHandler(BaseHandler):
 class ImportLanguageHandler(BaseHandler):
     def get(self):
 
-        return render_response('languages/import.html')
+        return self.render_response('languages/import.html')
 
     def post(self):
         json_file = self.request.files.get('file')
@@ -216,7 +216,11 @@ class ImportLanguageHandler(BaseHandler):
 
         return self.redirect_to('languages/import')
         
-            
+
+class ListLanguagesHandler(BaseHandler):
+    def get(self):
+        
+        return self.render_response('languages/list.html', languages=Language.all())
         
         
 

@@ -1,10 +1,11 @@
 from google.appengine.ext import db
-from google.appengine.ext import blobstore
 from apps.users.models import User
 
 class Film(db.Model):
     title = db.StringProperty(required=True)
     description = db.TextProperty(required=True)
+    imdb_link = db.LinkProperty(required=False)
+    release_year = db.IntegerProperty(required=True)
     user = db.ReferenceProperty(User, required=True)
     created = db.DateTimeProperty(auto_now_add=True)
 

@@ -17,6 +17,9 @@ if 'lib' not in sys.path:
     sys.path[0:0] = ['lib', 'distlib', 'distlib.zip']
 
 import config
+import logging
+logging.info('config')
+logging.info(config.config)
 import tipfy
 
 # Is this the development server?

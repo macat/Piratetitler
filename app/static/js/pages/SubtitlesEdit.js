@@ -32,7 +32,7 @@ function(subtitleListSetup, subtitleEditSetup, objectServiceSetup, changeSetSave
   }
   changeSetSaveSetup({
     url: application.conf.changeSetUrl,
-    type: 'subtitle',
+    type: 'subtitle'
   });
   $(window).unload(function(e){
     $.publish('closing', [this]);

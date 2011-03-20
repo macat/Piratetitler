@@ -13,7 +13,7 @@ class Language(db.Model):
     right_to_left = db.BooleanProperty(default=False)
 
     def __str__(self):
-        return '%s language' % self.name
+        return '%s' % self.name
 
 def subtitles_encode(lines):
     out = []

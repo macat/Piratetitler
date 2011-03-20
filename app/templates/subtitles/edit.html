@@ -2,7 +2,11 @@
 
 {% block title %}Subtitles for {{ subtitles.film.title }}{% endblock %}
 {% block contenttitle %}Subtitles for {{ subtitles.film.title }}{% endblock %}
-
+{% block breadcrumb %}
+    <a href="/" title="Mainpage">Mainpage</a> »
+    <a href="/films/{{ subtitles.film.key().id() }}" title="{{ subtitles.film.title }}">{{ subtitles.film.title }}</a>
+{% endblock %}
+{% block bodyid %}SubtitlesEdit{% endblock %}
 {% block content %}
     <div>Film: {{ subtitles.film.title }}</div>
     <div>Version: {{ subtitles.version.title }}</div>
@@ -20,19 +24,8 @@
     </div>
     <div id="subtitles">
     </div>
-    <script type="text/javascript" src="/static/js/requireplugins-jquery-1.4.4.js"></script>
     <script type="text/javascript">
-  // tell require where it can find our files
-  require({ baseUrl : '/static/js/' });
-  
-  Object.create = typeof(Object.create) == 'function' ? Object.create : 
-    function(o) {
-      var F = new Function();
-      F.prototype = o;
-      return new F();
-    };
-
-  var application = {
+  window.application = {
     conf: {
       changeSetUrl: '/sc/{{ subtitles.key().id() }}',
       {% if subtitles.reference %}
@@ -41,18 +34,6 @@
       objectServiceUrl: '/sl/{{ subtitles.key().id() }}'
     }
   };
-
-
-  // app-wide dependencies, not in requirejs module format
-  require(
-    ['/static/js/lib/pubsub.js', '/static/js/lib/sprintf.js', '/static/js/lib/mustache/mustache.js', '/static/js/lib/jquery.json-2.2.min.js'], function() {
-    // application
-    require(['app'], function(init) {
-      // application init on ready
-      $(document).ready(init);
-    });
-  });
-    
     </script>
 {% endblock %}
 

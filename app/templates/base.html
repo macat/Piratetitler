@@ -5,7 +5,7 @@
       <title>{% block title %}{% endblock %} - Subtitles Pirate</title>
       <link rel="stylesheet" type="text/css" href="/static/css/screen.css">
     </head>
-    <body id="{% block bodyid %}page-default{% endblock %}">
+    <body id="{% block bodyid %}{% endblock %}">
         <div id="head" class="top">
             <div id="logo">
                 <a href="/" title="Home - Pirate Titler"><img src="/static/images/logo.png" alt="Subtitles pirate logo"/><span>PIRATE TITLER</span>
@@ -26,10 +26,15 @@
             <div id="content-inner">
 
         <h1>{% block contenttitle %}{% endblock %}</h1>
-        <div class="toolbox">
-            {% block toolbox %}
-            {% endblock %}
-        </div>
+        <nav>
+            <p class="bradcrumb">
+                {% block breadcrumb %}{% endblock %}
+            </p>
+            <p class="toolbox">
+                {% block toolbox %}
+                {% endblock %}
+            </p>
+        </nav>
         {% block content %}
         {% endblock %}
             </div>
@@ -41,6 +46,31 @@
         </footer>
         {%- block body_extra %}
 
+    <script type="text/javascript" src="/static/js/lib/require.debug.js"></script>
+    <script type="text/javascript">
+  // tell require where it can find our files
+  require({ baseUrl : '/static/js/' });
+  
+  Object.create = typeof(Object.create) == 'function' ? Object.create : 
+    function(o) {
+      var F = new Function();
+      F.prototype = o;
+      return new F();
+    };
+  window.application = window.application || {};
+
+
+  // app-wide dependencies
+  require(
+    ['/static/js/lib/jquery.js', '/static/js/lib/pubsub.js', '/static/js/lib/sprintf.js', '/static/js/lib/mustache/mustache.js', '/static/js/lib/jquery.json-2.2.min.js'], function() {
+    // application
+    require(['app'], function(init) {
+      // application init on ready
+      $(document).ready(init);
+    });
+  });
+    
+    </script>
         {% endblock %}
     </body>
 </html>

@@ -10,7 +10,10 @@ define(
 function() {
   return function() {
     // load per-page functionality
-    require(['pages/SubtitlesEdit']);
+    var bodyId = $('body').attr('id');
+    if (bodyId) {
+      require(['pages/'+ bodyId]);
+    }
   };
 }
 

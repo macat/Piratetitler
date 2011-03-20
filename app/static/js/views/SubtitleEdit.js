@@ -1,5 +1,5 @@
 define(
-['text!/static/js/views/templates/SubtitleEditor.html'],
+['text!views/templates/SubtitleEditor.html'],
 function(tpl) {
   var edit = {
     _editEl: null,

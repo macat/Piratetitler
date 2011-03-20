@@ -1,0 +1,6 @@
+<?xml version="1.0"?> 
+<subtitles defaultLang="{{ default }}">
+    {% for entry in subtitles %}
+    <srt lang="{{ entry.language.iso_code }}">/subtitles/{{ entry.key().id() }}/export/srt</srt>  
+    {% endfor %}
+</subtitles>

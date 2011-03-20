@@ -15,4 +15,5 @@ class FilmVersion(db.Model):
     title = db.StringProperty(required=True)
     user = db.ReferenceProperty(User, required=True)
     created = db.DateTimeProperty(auto_now_add=True)
+    vimeoid = db.StringProperty()
 

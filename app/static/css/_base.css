@@ -46,7 +46,7 @@ h3 { font-size: 153.9%; }
 h4 { font-size: 138.5%; }
 h5 { font-size: 123.1%; }
 h6 { font-size: 108%; }
-h1, h2, h3, h4, h5, h6 { margin: 0 0 1em; }
+h1, h2, h3, h4, h5, h6 { margin: 0 0 .5em; }
 p, fieldset, table, pre { margin: 0 0 1em; }
 blockquote, ul, ol, dl { margin: 0 0 1em 1em; }
 ol, ul, dl { padding-left: .5em; list-style-position outside; }

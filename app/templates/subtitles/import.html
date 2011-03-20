@@ -1,8 +1,11 @@
 {% extends "base.html" %}
 {% from "_form_macros.html" import form_fields %}
 
-{% block title %}
-    New subtitle
+{% block title %}New subtitle{% endblock %}
+{% block contenttitle %}New subtitle{% endblock %}
+{% block breadcrumb %}
+    <a href="/" title="Mainpage">Mainpage</a> »
+    <a href="/films/{{ film.key().id() }}" title="{{ film.title }}">{{ film.title }}</a>
 {% endblock %}
 
 {% block content %}

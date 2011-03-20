@@ -54,7 +54,8 @@ class ImportHandler(BaseHandler):
 
     @user_required
     def get(self, film_id, version_id):
-        return render_response('subtitles/import.html', form=self.form)
+        film = Film.get_by_id(film_id)
+        return render_response('subtitles/import.html', form=self.form, film=film)
 
     @cached_property
     def form(self):

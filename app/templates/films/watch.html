@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% from "_form_macros.html" import form_fields %}
+
+{% block title %}Watch: {{ version.film.title }}{% endblock %}
+
+{% block contenttitle %}Watch: {{ version.film.title }}{% endblock %}
+{% block bodyid %}Watch{% endblock %}
+
+{% block content %}
+    <div id="watch-container"></div>
+    <script type="text/javascript" charset="utf-8">
+        window.application = {
+            conf: {
+                srtXmlUrl: '/films/220/versions/221/subtitles-xml',
+                srtUrl: '/subtitles/365/export/srt',
+                vimeoId: '17712557',
+            }
+        }
+    </script>
+
+{% endblock %}

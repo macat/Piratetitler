@@ -3,12 +3,16 @@
 {% block title %}
     {{ film.title }} - Film
 {% endblock %}
+{% block bodyid %}FilmPage{% endblock %}
+{% block breadcrumb %}
+    <a href="/" title="Mainpage">Mainpage</a> »
+{% endblock %}
 
 {% block content %}
     <h1>{{ film.title }}</h1>
     <article>
         <p>
-        {{ film.description }}
+        {{ film.description|replace("\n", "<br/>") }}
         </p>
     </article>
     <div class="block">
@@ -20,21 +24,25 @@
             </div>
             <h4>{{ version.title }}</h4>
             {% for subtitle in subtitles[version.key().id()] %}
-            <article class="subtitles">
+            <article class="subtitles clear">
+                <div class="item-toolbox">
+                    <a href="/subtitles/{{ subtitle.key().id() }}/export/srt" class="button"><span>Download</span></a>
+                    <a href="/subtitles/{{ subtitle.key().id() }}/edit" class="button"><span>Edit</span></a>
+                    <a href="#translate-{{ subtitle.key().id() }}" class="button hidden-tool-button"><span>Translate</span></a>
+                    <div id="translate-{{ subtitle.key().id() }}" class="hidden-tool">
+                        <form action="/translate" method="POST">
+                            {{ translate_form.language }}
+                            <input type="hidden" name="id" value="{{ subtitle.key().id() }}"/>
+                            <button>Translate</button>
+                        </form>
+                    </div>
+                </div>
                 <div class="subtitles-language">
-                    <a href="/subtitles/{{ subtitle.key().id() }}/edit"><span class="{{ subtitle.language.iso_code }}">{{ subtitle.language.name }} ({{ subtitle.language.native_name }})</span></a>
+                    <span class="{{ subtitle.language.iso_code }}">{{ subtitle.language.name }} ({{ subtitle.language.native_name }})</span>
                 </div>
                 <div class="meta">
                     Created: {{ subtitle.created }}, by {{ subtitle.user.username }}
                 </div>
-                <div class="item-toolbox">
-                    <a href="/subtitles/{{ subtitle.key().id() }}/export/srt" class="button"><span>Download</span></a>
-                </div>
-                <form action="/translate" method="POST">
-                    {{ translate_form.language }}
-                    <input type="hidden" name="id" value="{{ subtitle.key().id() }}"/>
-                    <button>Translate</button>
-                </form>
             </article>
             {% endfor %}
         </section>

@@ -7,9 +7,9 @@ from apps.subtitles.models import Language
 
 class SrtImportForm(Form):
     srt_file = fields.FileField(_(u'Srt file'))
-    language = ReferencePropertyField(_(u'Language'), reference_class=Language)
+    language = ReferencePropertyField(_(u'Language'), reference_class=Language, label_attr='name')
 
 class TranslateForm(Form):
-    language = ReferencePropertyField(_(u'Language'), reference_class=Language)
+    language = ReferencePropertyField(_(u'Language'), reference_class=Language, label_attr='name')
     
     

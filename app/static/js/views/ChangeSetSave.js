@@ -14,8 +14,8 @@ function() {
     },
 
     handleChange: function(sender, el) {
-      var key = 0;
-      if (key = $.inArray(el[0], this._changeSetPool) >= 0) {
+      var key = $.inArray(el[0], this._changeSetPool);
+      if (key >= 0) {
         this._changeSetPool[key] = el[0];
       }
       else {

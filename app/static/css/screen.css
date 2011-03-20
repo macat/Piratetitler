@@ -185,7 +185,9 @@ a.button:hover {
 .item-toolbox a.button {
   padding: 3px;
   font-size: 80%;
-  margin: 12px;
+  margin: 4px;
+  float: right;
+  display: block;
 }
 
 footer, #footer {
@@ -205,6 +207,7 @@ footer, #footer {
 .subtitles {
   background: #eee;
   margin: 6px 0;
+  padding: 4px;
 }
 .subtitle-time {
   padding: 4px;
@@ -240,6 +243,10 @@ footer, #footer {
 
 .subtitle-reference {
   color: #999;
+}
+
+.meta {
+  clear: both;
 }
 
 .line {
@@ -295,4 +302,11 @@ footer, #footer {
   font-size: 10px;
   display: block;
   margin-left: 40px;
+}
+
+.item-toolbox .hidden-tool {
+  float: right;
+  display: none;
+  margin: 4px;
+
 }

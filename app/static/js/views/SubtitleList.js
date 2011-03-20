@@ -1,6 +1,6 @@
 define(
     
-['text!/static/js/views/templates/SubtitleRow.html'],
+['text!views/templates/SubtitleRow.html'],
 
 function(tpl) {
   var list = {

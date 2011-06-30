@@ -35,6 +35,7 @@ class NewFilmHandler(BaseHandler):
         return FilmForm(self.request.form)
 
 class NewFilmVersionHandler(BaseHandler):
+    """ Add new film version page """
     @user_required
     def post(self, film_id, **kwargs):
         if self.form.validate():

@@ -8,6 +8,9 @@ _FilmForm = model_form(model=Film,
                        only=['title', 'description', 'imdb_link', 'release_year'])
 
 class FilmForm(_FilmForm):
+    """
+    Form for Film model
+    """
     descriptions = {
         'title': _('Title of film'), 
         'description': _('Short description about the film'),
